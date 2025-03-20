@@ -1,4 +1,6 @@
 spring:
+  profiles:
+    active: dev
   application:
     name: biblioteca
   datasource:
@@ -6,3 +8,6 @@ spring:
     username: guest
     password: guest
     driver-class: org.postgresql.Driver
+
+server:
+  port: 3000

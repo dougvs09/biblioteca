@@ -1,26 +1,439 @@
 openapi: 3.0.4
 info:
-  title: Sample Pet Store App
+  title: Desafio Técnico SoftDesign
   version: 1.0.0
-  description: This is a sample server for a pet store.
+  description: This is a technical challange of SoftDesign Brasil.
 servers:
   - url: http://localhost:3001/v1
+security:
+  - BearerAuth: []
 paths:
-  /example:
-    get:
+  /login:
+    post:
+      tags:
+        - login
+      summary: Login
+      operationId: login
+      description: Do the login
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
       responses:
-        "200":
-          description: OK
+        '200':
+          description: Ok
           content:
-            text/plain:
+            application/json:
               schema:
-                type: string
-                example: pong
+                $ref: '#/components/schemas/LoginResponse'
+        '400':
+          $ref: "#/components/responses/BadRequest"
+        '422':
+          $ref: "#/components/responses/UnprocessableContent"
+        '500':
+          $ref: "#/components/responses/InternalServerError"
+  /user:
+    post:
+      tags:
+        - user
+      summary: Create a user
+      operationId: createUser
+      description: Create a user in the database
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUserRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        '400':
+          $ref: "#/components/responses/BadRequest"
+        '422':
+          $ref: "#/components/responses/UnprocessableContent"
+        '500':
+          $ref: "#/components/responses/InternalServerError"
+  /book:
+    post:
+      tags:
+        - book
+      summary: Create a book
+      operationId: createBook
+      description: Create a book in the database
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateBookRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookResponse'
+        '400':
+          $ref: "#/components/responses/BadRequest"
+        '401':
+          $ref: "#/components/responses/Unauthorized"
+        '422':
+          $ref: "#/components/responses/UnprocessableContent"
+        '500':
+          $ref: "#/components/responses/InternalServerError"
+  /book/rent/{id}:
+    patch:
+      tags:
+        - book
+      summary: Rent a book
+      operationId: rentBook
+      description: Rent a book for an user
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          description: The number of the book
+          required: true
+          example: 1
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookResponse'
+        '400':
+          $ref: "#/components/responses/BadRequest"
+        '401':
+          $ref: "#/components/responses/Unauthorized"
+        '404':
+          $ref: "#/components/responses/NotFound"
+        '422':
+          $ref: "#/components/responses/UnprocessableContent"
+        '500':
+          $ref: "#/components/responses/InternalServerError"
+  /book/{id}:
+    get:
+      tags:
+        - book
+      summary: Get a book
+      operationId: getBook
+      description: Get a book with all informations
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          description: The number of the book
+          required: true
+          example: 1
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookResponse'
+        '401':
+          $ref: "#/components/responses/Unauthorized"
+        '404':
+          $ref: "#/components/responses/NotFound"
+        '422':
+          $ref: "#/components/responses/UnprocessableContent"
+        '500':
+          $ref: "#/components/responses/InternalServerError"
+    delete:
+      tags:
+        - book
+      summary: Delete a book
+      operationId: deleteBook
+      description: Delete a book
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          description: The number of the book
+          required: true
+          example: 1
+      responses:
+        '204':
+          description: Delete
+        '401':
+          $ref: "#/components/responses/Unauthorized"
+        '404':
+          $ref: "#/components/responses/NotFound"
+        '422':
+          $ref: "#/components/responses/UnprocessableContent"
+        '500':
+          $ref: "#/components/responses/InternalServerError"
+  /book/list:
+    post:
+      tags:
+        - book
+      summary: List all books with the filters
+      operationId: listBooks
+      description: List all books in the database with the filters
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+          description: The number of the page
+          required: true
+          example: 2
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          description: The numbers of items to return
+          required: true
+          example: 10
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ListBooksFiltersRequest'
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListBooksResponse'
+        '401':
+          $ref: "#/components/responses/Unauthorized"
+        '422':
+          $ref: "#/components/responses/UnprocessableContent"
+        '500':
+          $ref: "#/components/responses/InternalServerError"
 components:
+  schemas:
+    LoginResponse:
+      type: object
+      required:
+        - token
+        - expiresIn
+        - timestamp
+      properties:
+        token:
+          type: string
+          description: token for authenticate in application
+          example: 'eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNzA4MzQ1MTIzLCJleHAiOjE3MDgzNTUxMjN9'
+        expiresIn:
+          type: string
+          format: timestamp
+          description: time limit for expires the token
+          example: '2025-03-20T23:02:24+00:00'
+        timestamp:
+          type: string
+          format: timestamp
+          description: timestamp of generation the token
+          example: '2025-03-20T23:02:24+00:00'
+    LoginRequest:
+      type: object
+      required:
+        - password
+        - email
+      properties:
+        email:
+          type: string
+          description: name of the user
+          example: 'douglas@email.com'
+        password:
+          type: string
+          description: password of the user
+          example: 'senha123'
+    UserResponse:
+      type: object
+      required:
+        - name
+        - email
+      properties:
+        name:
+          type: string
+          description: name of the user
+          example: 'Douglas'
+        email:
+          type: string
+          description: email of the user
+          example: 'douglas@email.com'
+    CreateUserRequest:
+      type: object
+      required:
+        - name
+        - email
+        - password
+      properties:
+        name:
+          type: string
+          description: name of the user
+          example: 'Douglas'
+        email:
+          type: string
+          description: email of the user
+          example: 'douglas@email.com'
+        password:
+          type: string
+          description: password of the user
+          example: 'senha1234'
+    BookResponse:
+      type: object
+      required:
+        - name
+      properties:
+        id:
+          type: integer
+          description: unique id of the book
+          example: 1
+        name:
+          type: string
+          description: name of the book
+          example: 'Java: Como Programar'
+        resume:
+          type: string
+          description: resume of the book
+          example: 'Milhões de alunos e profissionais aprenderam programação e desenvolvimento de software com os livros Deitel®. Java: como programar, 10ª edição, fornece uma introdução clara, simples, envolvente e divertida à programação Java com ênfase inicial em objetos. Destaques incluem: rica cobertura dos fundamentos com exemplos reais; apresentação com ênfase inicial em classes e objetos; uso com Java™ SE 7, Java™ SE 8 ou ambos; Java™ SE 8 abordado em seções modulares opcionais; lambdas, fluxos e interfaces funcionais usando métodos padrão e estáticos do Java SE 8; Swing e GUI do JavaFX: elementos gráficos e multimídia; conjunto de exercícios Fazendo a diferença; tratamento de exceções integrado; arquivos, fluxos e serialização de objetos; concorrência para melhor desempenho com multiprocessamento; o livro contém o conteúdo principal para cursos introdutórios; outros tópicos: recursão, pesquisa, classificação, coleções genéricas, estruturas de dados, multithreading, banco de dados (JDBC ™ e JPA).'
+        releaseYear:
+          type: string
+          description: release year of the book
+          example: '2016'
+        genre:
+          type: string
+          description: genre of the book
+          example: 'Programação'
+        authors:
+          type: array
+          items:
+            type: string
+          description: author(s) of the book
+          example: ['Paul Deitel', 'Harvey Deitel']
+        status:
+          type: string
+          enum: ['Available', 'Unavailable']
+          description: current status of the book
+          example: 'Available'
+    ListBooksFiltersRequest:
+      type: object
+      properties:
+        author:
+          type: string
+          description: author of the book
+          example: 'Paul Deitel'
+        genres:
+          type: array
+          items:
+            type: string
+          description: genres of the books
+          example: ['Programação', 'Técnico']
+        releaseYears:
+          type: array
+          items:
+            type: string
+          description: release date of the books
+          example: ['2024', '2023']
+    ListBooksResponse:
+      type: array
+      items:
+        type: object
+        required:
+          - id
+          - name
+        properties:
+          id:
+            type: integer
+            description: id of the book
+            example: 1
+          name:
+            type: string
+            description: name of the book
+            example: 'Java: Como Programar'
+          authors:
+            type: array
+            items:
+              type: string
+            description: author(s) of the book
+            example: ['Paul Deitel', 'Harvey Deitel']
+    CreateBookRequest:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          description: name of the book
+          example: 'Java: Como Programar'
+        resume:
+          type: string
+          description: resume of the book
+          example: 'Milhões de alunos e profissionais aprenderam programação e desenvolvimento de software com os livros Deitel®. Java: como programar, 10ª edição, fornece uma introdução clara, simples, envolvente e divertida à programação Java com ênfase inicial em objetos. Destaques incluem: rica cobertura dos fundamentos com exemplos reais; apresentação com ênfase inicial em classes e objetos; uso com Java™ SE 7, Java™ SE 8 ou ambos; Java™ SE 8 abordado em seções modulares opcionais; lambdas, fluxos e interfaces funcionais usando métodos padrão e estáticos do Java SE 8; Swing e GUI do JavaFX: elementos gráficos e multimídia; conjunto de exercícios Fazendo a diferença; tratamento de exceções integrado; arquivos, fluxos e serialização de objetos; concorrência para melhor desempenho com multiprocessamento; o livro contém o conteúdo principal para cursos introdutórios; outros tópicos: recursão, pesquisa, classificação, coleções genéricas, estruturas de dados, multithreading, banco de dados (JDBC ™ e JPA).'
+        releaseYear:
+          type: string
+          description: release year of the book
+          example: '2016'
+        genre:
+          type: string
+          description: genre of the book
+          example: 'Programação'
+        authors:
+          type: array
+          items:
+            type: string
+          description: author(s) of the book
+          example: ['Paul Deitel', 'Harvey Deitel']
+    Error:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: string
+          description: http code of the error
+          example: '404'
+        message:
+          type: string
+          description: message of the error
+          example: 'Unauthorized'
+  responses:
+    BadRequest:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    NotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    UnprocessableContent:
+      description: Unprocessable content
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
   securitySchemes:
     BearerAuth:
+      description: Bearer token using a JWT
       type: http
       scheme: bearer
       bearerFormat: JWT
-security:
-  - bearerAuth: []

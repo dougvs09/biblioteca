@@ -3,6 +3,7 @@ package br.com.biblioteca.configuration;
 import br.com.biblioteca.repository.AuthorRepository;
 import br.com.biblioteca.repository.BookAuthorRepository;
 import br.com.biblioteca.repository.BookRepository;
+import br.com.biblioteca.repository.UserRepository;
 import org.jdbi.v3.core.Jdbi;
 import org.jdbi.v3.core.mapper.RowMapper;
 import org.jdbi.v3.core.spi.JdbiPlugin;
@@ -48,5 +49,11 @@ public class JdbiConfiguration {
     @Primary
     public AuthorRepository authorRepository(Jdbi jdbi) {
         return jdbi.onDemand(AuthorRepository.class);
+    }
+
+    @Bean
+    @Primary
+    public UserRepository userRepository(Jdbi jdbi) {
+        return jdbi.onDemand(UserRepository.class);
     }
 }

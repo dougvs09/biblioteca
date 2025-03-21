@@ -37,7 +37,7 @@ paths:
     post:
       tags:
         - user
-      summary: Create a user
+      summary: Create an user
       operationId: createUser
       description: Create a user in the database
       requestBody:
@@ -257,19 +257,19 @@ components:
       type: object
       required:
         - token
-        - expiresIn
-        - timestamp
+        - expiresAt
+        - createdAt
       properties:
         token:
           type: string
           description: token for authenticate in application
           example: 'eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNzA4MzQ1MTIzLCJleHAiOjE3MDgzNTUxMjN9'
-        expiresIn:
+        expiresAt:
           type: string
           format: timestamp
           description: time limit for expires the token
           example: '2025-03-20T23:02:24+00:00'
-        timestamp:
+        createdAt:
           type: string
           format: timestamp
           description: timestamp of generation the token

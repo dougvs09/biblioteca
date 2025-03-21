@@ -1,21 +1,22 @@
 package br.com.biblioteca.configuration;
 
-import br.com.biblioteca.exception.BookCannotBeRentedException;
-import br.com.biblioteca.exception.BookCannotBeReturnedException;
-import br.com.biblioteca.exception.BookNotFoundException;
+import br.com.biblioteca.exception.*;
+import com.auth0.jwt.exceptions.JWTCreationException;
+import com.auth0.jwt.exceptions.JWTVerificationException;
 import org.openapitools.model.ErrorResponse;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 @RestControllerAdvice
 @Order(Ordered.HIGHEST_PRECEDENCE)
-public class RestControllerAdviceExceptionConfiguration {
+@EnableWebMvc
+public class RestControllerAdviceExceptionConfiguration extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler({BookCannotBeRentedException.class})
     public ResponseEntity<ErrorResponse> bookCannotBeRentedException(BookCannotBeRentedException e) {
@@ -47,23 +48,63 @@ public class RestControllerAdviceExceptionConfiguration {
         return ResponseEntity.status(e.getStatusCode()).body(errorResponse);
     }
 
-    @ExceptionHandler({MethodArgumentTypeMismatchException.class})
-    public ResponseEntity<ErrorResponse> methodArgumentTypeMismatchException(MethodArgumentTypeMismatchException e) {
+    @ExceptionHandler({BookCannotBeDeletedException.class})
+    public ResponseEntity<ErrorResponse> bookCannotBeDeletedException(BookCannotBeDeletedException e) {
         ErrorResponse errorResponse = new ErrorResponse();
 
-        errorResponse.setCode(HttpStatus.BAD_REQUEST.toString());
+        errorResponse.setCode(e.getStatusCode().toString());
         errorResponse.setMessage(e.getMessage());
 
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+        return ResponseEntity.status(e.getStatusCode()).body(errorResponse);
     }
 
-    @ExceptionHandler({MethodArgumentNotValidException.class})
-    public ResponseEntity<ErrorResponse> methodArgumentNotValidException(MethodArgumentNotValidException e) {
+    @ExceptionHandler({JwtTokenException.class})
+    public ResponseEntity<ErrorResponse> jwtTokenException(JwtTokenException e) {
         ErrorResponse errorResponse = new ErrorResponse();
 
-        errorResponse.setCode(HttpStatus.UNPROCESSABLE_ENTITY.toString());
+        errorResponse.setCode(e.getStatusCode().toString());
         errorResponse.setMessage(e.getMessage());
 
-        return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(errorResponse);
+        return ResponseEntity.status(e.getStatusCode()).body(errorResponse);
+    }
+
+    @ExceptionHandler({UserAlreadyExistsException.class})
+    public ResponseEntity<ErrorResponse> userAlreadyExistsException(UserAlreadyExistsException e) {
+        ErrorResponse errorResponse = new ErrorResponse();
+
+        errorResponse.setCode(e.getStatusCode().toString());
+        errorResponse.setMessage(e.getMessage());
+
+        return ResponseEntity.status(e.getStatusCode()).body(errorResponse);
+    }
+
+    @ExceptionHandler({UserNotFoundException.class})
+    public ResponseEntity<ErrorResponse> userNotFoundException(UserNotFoundException e) {
+        ErrorResponse errorResponse = new ErrorResponse();
+
+        errorResponse.setCode(e.getStatusCode().toString());
+        errorResponse.setMessage(e.getMessage());
+
+        return ResponseEntity.status(e.getStatusCode()).body(errorResponse);
+    }
+
+    @ExceptionHandler({JWTCreationException.class})
+    public ResponseEntity<ErrorResponse> jwtCreationException(JWTCreationException e) {
+        ErrorResponse errorResponse = new ErrorResponse();
+
+        errorResponse.setCode(HttpStatus.INTERNAL_SERVER_ERROR.toString());
+        errorResponse.setMessage(e.getMessage());
+
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+    }
+
+    @ExceptionHandler({JWTVerificationException.class})
+    public ResponseEntity<ErrorResponse> jwtVerificationException(JWTVerificationException e) {
+        ErrorResponse errorResponse = new ErrorResponse();
+
+        errorResponse.setCode(HttpStatus.UNAUTHORIZED.toString());
+        errorResponse.setMessage(e.getMessage());
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
     }
 }

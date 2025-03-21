@@ -15,10 +15,10 @@ public class Book {
 
     @Setter
     private Integer id;
-    private String name;
-    private String resume;
-    private String releaseYear;
-    private String genre;
+    private final String name;
+    private final String resume;
+    private final String releaseYear;
+    private final String genre;
     private List<Author> authors;
     private StatusEnum status;
     private boolean active;

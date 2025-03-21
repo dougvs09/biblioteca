@@ -7,9 +7,9 @@ import java.time.Instant;
 @Getter
 public class JwtTokenInfo {
 
-    private String token;
-    private Instant creationDate;
-    private Instant expirationDate;
+    private final String token;
+    private final Instant creationDate;
+    private final Instant expirationDate;
 
     private JwtTokenInfo(String token, Instant creationDate, Instant expirationDate) {
         this.token = token;

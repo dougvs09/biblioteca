@@ -4,12 +4,14 @@ import br.com.biblioteca.domain.Author;
 import br.com.biblioteca.domain.Book;
 import br.com.biblioteca.domain.PaginationWrapper;
 import br.com.biblioteca.domain.StatusEnum;
+import br.com.biblioteca.exception.BookNotFoundException;
 import br.com.biblioteca.repository.AuthorRepository;
 import br.com.biblioteca.repository.BookAuthorRepository;
 import br.com.biblioteca.repository.BookRepository;
 import lombok.RequiredArgsConstructor;
 import org.openapitools.model.CreateBookRequest;
 import org.openapitools.model.ListBooksFiltersRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -50,6 +52,15 @@ public class BookService {
                 filtersRequest.getReleaseYears());
 
         return new PaginationWrapper<>(page, limit, total, books);
+    }
+
+    public Book getBook(Integer id) {
+        Book book = bookRepository.getBookByBookId(id).orElseThrow(() ->
+                new BookNotFoundException("Book not found! Verify the id", HttpStatus.BAD_REQUEST));
+
+        List<Author> authors = authorRepository.getAuthorsByBookId(book.getId());
+
+        return book.addAuthors(authors);
     }
 
     private Integer getOffset(Integer page, Integer limit) {

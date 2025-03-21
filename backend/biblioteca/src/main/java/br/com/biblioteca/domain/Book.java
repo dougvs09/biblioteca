@@ -3,7 +3,9 @@ package br.com.biblioteca.domain;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Getter
 public class Book {
@@ -49,5 +51,19 @@ public class Book {
 
     public static Book of(Integer id, String name, StatusEnum status) {
         return new Book(id, name, null, null, null, null, status);
+    }
+
+    public static Book of(Integer id, String name, String resume, String releaseYear, String genre, StatusEnum status) {
+        return new Book(id, name, resume, releaseYear, genre, null, status);
+    }
+
+    public Book addAuthors(List<Author> authors) {
+        if (Objects.isNull(this.authors)) {
+            this.authors = new ArrayList<>();
+        }
+
+        this.authors.addAll(authors);
+
+        return this;
     }
 }

@@ -2,6 +2,7 @@ package br.com.biblioteca.repository;
 
 import br.com.biblioteca.domain.Book;
 import br.com.biblioteca.domain.StatusEnum;
+import br.com.biblioteca.mapper.GetBookByBookIdRowMapper;
 import br.com.biblioteca.mapper.ListBooksRowMapper;
 import org.jdbi.v3.sqlobject.customizer.Bind;
 import org.jdbi.v3.sqlobject.customizer.BindBean;
@@ -15,6 +16,7 @@ import org.jdbi.v3.sqlobject.statement.UseRowMapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @UseClasspathSqlLocator
@@ -23,6 +25,10 @@ public interface BookRepository {
     @SqlUpdate
     @GetGeneratedKeys
     Integer create(@BindBean("book") Book book);
+
+    @SqlQuery
+    @UseRowMapper(GetBookByBookIdRowMapper.class)
+    Optional<Book> getBookByBookId(@Bind("id") Integer id);
 
     @SqlQuery
     Integer countTotal(@Bind("author") String author,

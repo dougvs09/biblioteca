@@ -1,0 +1,1 @@
+UPDATE tbbook SET active = FALSE WHERE id = :book.id

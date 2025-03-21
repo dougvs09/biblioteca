@@ -27,7 +27,7 @@ public class BookService {
     private final BookAuthorRepository bookAuthorRepository;
 
     @Transactional
-    public Book create(CreateBookRequest request) {
+    public Book createBook(CreateBookRequest request) {
         List<Author> authors = request.getAuthors().stream().map(Author::of).toList();
         Book book = Book.of(request.getName(), request.getResume(), request.getReleaseYear(), request.getGenre(), authors);
 
@@ -40,7 +40,7 @@ public class BookService {
         return book;
     }
 
-    public PaginationWrapper<Book> list(Integer limit, Integer page, String order, ListBooksFiltersRequest filtersRequest) {
+    public PaginationWrapper<Book> listBooks(Integer limit, Integer page, String order, ListBooksFiltersRequest filtersRequest) {
         StatusEnum status = Objects.nonNull(filtersRequest.getStatus()) ? StatusEnum.fromValue(filtersRequest.getStatus().getValue()) : null;
 
         Integer total = bookRepository.countTotal(filtersRequest.getAuthor(), status,
@@ -81,6 +81,12 @@ public class BookService {
         bookRepository.updateBookStatus(book);
 
         return book;
+    }
+
+    public void deleteBook(Integer id) {
+        Book book = this.getBook(id);
+
+        bookRepository.deleteBook(book);
     }
 
     private Integer getOffset(Integer page, Integer limit) {

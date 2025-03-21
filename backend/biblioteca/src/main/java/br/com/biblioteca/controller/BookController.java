@@ -27,13 +27,15 @@ public class BookController implements BookApi {
 
     @Override
     public ResponseEntity<BookResponse> createBook(CreateBookRequest createBookRequest) {
-        Book book = bookService.create(createBookRequest);
+        Book book = bookService.createBook(createBookRequest);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(bookResponseMapper.toResponse(book));
     }
 
     @Override
     public ResponseEntity<Void> deleteBook(Integer id) {
+        bookService.deleteBook(id);
+
         return ResponseEntity.status(HttpStatus.ACCEPTED).build();
     }
 
@@ -46,7 +48,7 @@ public class BookController implements BookApi {
 
     @Override
     public ResponseEntity<ListBooksResponse> listBooks(Integer page, Integer limit, String order, ListBooksFiltersRequest listBooksFiltersRequest) {
-        PaginationWrapper<Book> paginationWrapper = bookService.list(limit, page, order, listBooksFiltersRequest);
+        PaginationWrapper<Book> paginationWrapper = bookService.listBooks(limit, page, order, listBooksFiltersRequest);
 
         return ResponseEntity.status(HttpStatus.OK).body(listBooksResponseMapper.toResponse(paginationWrapper));
     }

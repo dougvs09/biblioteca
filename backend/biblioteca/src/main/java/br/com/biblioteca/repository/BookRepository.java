@@ -26,6 +26,9 @@ public interface BookRepository {
     void updateBookStatus(@BindBean("book") Book book);
 
     @SqlUpdate
+    void deleteBook(@BindBean("book") Book book);
+
+    @SqlUpdate
     @GetGeneratedKeys
     Integer create(@BindBean("book") Book book);
 

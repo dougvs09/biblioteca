@@ -1,0 +1,1 @@
+UPDATE tbbook SET status = CAST(:book.status AS status) WHERE id = :book.id AND active IS TRUE

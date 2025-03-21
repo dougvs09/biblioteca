@@ -117,6 +117,38 @@ paths:
           $ref: "#/components/responses/UnprocessableContent"
         '500':
           $ref: "#/components/responses/InternalServerError"
+  /book/return/{id}:
+    patch:
+      tags:
+        - book
+      summary: Return a book
+      operationId: returnBook
+      description: Return a book for the library
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          description: The number of the book
+          required: true
+          example: 1
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookResponse'
+        '400':
+          $ref: "#/components/responses/BadRequest"
+        '401':
+          $ref: "#/components/responses/Unauthorized"
+        '404':
+          $ref: "#/components/responses/NotFound"
+        '422':
+          $ref: "#/components/responses/UnprocessableContent"
+        '500':
+          $ref: "#/components/responses/InternalServerError"
   /book/{id}:
     get:
       tags:

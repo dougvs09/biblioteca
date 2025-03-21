@@ -23,6 +23,9 @@ import java.util.Optional;
 public interface BookRepository {
 
     @SqlUpdate
+    void updateBookStatus(@BindBean("book") Book book);
+
+    @SqlUpdate
     @GetGeneratedKeys
     Integer create(@BindBean("book") Book book);
 

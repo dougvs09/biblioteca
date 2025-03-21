@@ -63,6 +63,26 @@ public class BookService {
         return book.addAuthors(authors);
     }
 
+    public Book rentBook(Integer id) {
+        Book book = this.getBook(id);
+
+        book.rent();
+
+        bookRepository.updateBookStatus(book);
+
+        return book;
+    }
+
+    public Book returnBook(Integer id) {
+        Book book = this.getBook(id);
+
+        book.returning();
+
+        bookRepository.updateBookStatus(book);
+
+        return book;
+    }
+
     private Integer getOffset(Integer page, Integer limit) {
         return (page - 1) * limit;
     }

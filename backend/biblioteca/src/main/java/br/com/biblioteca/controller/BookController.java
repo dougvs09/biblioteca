@@ -53,6 +53,15 @@ public class BookController implements BookApi {
 
     @Override
     public ResponseEntity<BookResponse> rentBook(Integer id) {
-        return ResponseEntity.status(HttpStatus.OK).body(new BookResponse());
+        Book book = bookService.rentBook(id);
+
+        return ResponseEntity.status(HttpStatus.OK).body(bookResponseMapper.toResponse(book));
+    }
+
+    @Override
+    public ResponseEntity<BookResponse> returnBook(Integer id) {
+        Book book = bookService.returnBook(id);
+
+        return ResponseEntity.status(HttpStatus.OK).body(bookResponseMapper.toResponse(book));
     }
 }

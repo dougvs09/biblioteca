@@ -1,7 +1,9 @@
 package br.com.biblioteca.domain;
 
+import br.com.biblioteca.exception.BookCannotBeRentedException;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.http.HttpStatus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,5 +67,21 @@ public class Book {
         this.authors.addAll(authors);
 
         return this;
+    }
+
+    public void rent() {
+        if (this.status == StatusEnum.UNAVAILABLE) {
+            throw new BookCannotBeRentedException("This book cannot be rented because it's rented now", HttpStatus.BAD_REQUEST);
+        }
+
+        this.status = StatusEnum.UNAVAILABLE;
+    }
+
+    public void returning() {
+        if (this.status == StatusEnum.AVAILABLE) {
+            throw new BookCannotBeRentedException("This book cannot be returned because it's available now", HttpStatus.BAD_REQUEST);
+        }
+
+        this.status = StatusEnum.AVAILABLE;
     }
 }

@@ -1,5 +1,6 @@
 package br.com.biblioteca.domain;
 
+import br.com.biblioteca.exception.BookCannotBeDeletedException;
 import br.com.biblioteca.exception.BookCannotBeRentedException;
 import lombok.Getter;
 import lombok.Setter;
@@ -83,5 +84,13 @@ public class Book {
         }
 
         this.status = StatusEnum.AVAILABLE;
+    }
+
+    public void delete() {
+        if (this.status == StatusEnum.UNAVAILABLE) {
+            throw new BookCannotBeDeletedException("This book cannot be returned because it's available now", HttpStatus.BAD_REQUEST);
+        }
+
+        this.active = false;
     }
 }

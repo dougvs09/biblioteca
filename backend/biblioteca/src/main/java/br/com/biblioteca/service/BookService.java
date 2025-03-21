@@ -87,6 +87,8 @@ public class BookService {
     public void deleteBook(Integer id) {
         Book book = this.getBook(id);
 
+        book.delete();
+
         bookRepository.deleteBook(book);
     }
 

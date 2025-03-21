@@ -194,6 +194,13 @@ paths:
           description: The numbers of items to return
           required: true
           example: 10
+        - in: query
+          name: order
+          schema:
+            type: string
+          description: The order of items
+          required: true
+          example: 'ASC'
       requestBody:
         content:
           application/json:
@@ -321,6 +328,11 @@ components:
     ListBooksFiltersRequest:
       type: object
       properties:
+        status:
+          type: string
+          enum: [ 'Available', 'Unavailable' ]
+          description: current status of the book
+          example: 'Available'
         author:
           type: string
           description: author of the book
@@ -338,27 +350,63 @@ components:
           description: release date of the books
           example: ['2024', '2023']
     ListBooksResponse:
-      type: array
-      items:
-        type: object
-        required:
-          - id
-          - name
-        properties:
-          id:
-            type: integer
-            description: id of the book
-            example: 1
-          name:
-            type: string
-            description: name of the book
-            example: 'Java: Como Programar'
-          authors:
-            type: array
-            items:
-              type: string
-            description: author(s) of the book
-            example: ['Paul Deitel', 'Harvey Deitel']
+      type: object
+      required:
+        - page
+        - limit
+        - totalPages
+        - hasPrevious
+        - hasNext
+        - isEmpty
+        - total
+        - content
+      properties:
+        page:
+          type: integer
+          description: current page of the list
+          example: 1
+        limit:
+          type: integer
+          description: limit of the content per page
+          example: 20
+        totalPages:
+          type: integer
+          description: total of pages
+          example: 12
+        hasPrevious:
+          type: boolean
+          description: has previous page
+          example: true
+        hasNext:
+          type: boolean
+          description: has next page
+          example: true
+        isEmpty:
+          type: boolean
+          description: the content is empty, no content
+          example: false
+        total:
+          type: integer
+          description: total of content
+          example: 100
+        content:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                description: id of the book
+                example: 1
+              name:
+                type: string
+                description: name of the book
+                example: 'Java: Como Programar'
+              status:
+                type: string
+                enum: [ 'Available', 'Unavailable' ]
+                description: current status of the book
+                example: 'Available'
     CreateBookRequest:
       type: object
       required:

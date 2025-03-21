@@ -29,14 +29,14 @@ public class Book {
         this.status = StatusEnum.AVAILABLE;
     }
 
-    private Book(String name, String resume, String releaseYear, String genre, List<Author> authors) {
+    private Book(Integer id, String name, String resume, String releaseYear, String genre, List<Author> authors, StatusEnum status) {
+        this.id = id;
         this.name = name;
         this.resume = resume;
         this.releaseYear = releaseYear;
         this.genre = genre;
         this.authors = authors;
-        this.active = true;
-        this.status = StatusEnum.AVAILABLE;
+        this.status = status;
     }
 
     public static Book of(Integer id, String name, String resume, String releaseYear, String genre, List<Author> authors) {
@@ -44,6 +44,10 @@ public class Book {
     }
 
     public static Book of(String name, String resume, String releaseYear, String genre, List<Author> authors) {
-        return new Book(name, resume, releaseYear, genre, authors);
+        return new Book(null, name, resume, releaseYear, genre, authors);
+    }
+
+    public static Book of(Integer id, String name, StatusEnum status) {
+        return new Book(id, name, null, null, null, null, status);
     }
 }

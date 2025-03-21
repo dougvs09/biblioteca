@@ -1,20 +1,20 @@
 package br.com.biblioteca.controller;
 
 import br.com.biblioteca.domain.Book;
+import br.com.biblioteca.domain.PaginationWrapper;
 import br.com.biblioteca.mapper.BookResponseMapper;
+import br.com.biblioteca.mapper.ListBooksResponseMapper;
 import br.com.biblioteca.service.BookService;
 import lombok.RequiredArgsConstructor;
 import org.openapitools.api.BookApi;
 import org.openapitools.model.BookResponse;
 import org.openapitools.model.CreateBookRequest;
 import org.openapitools.model.ListBooksFiltersRequest;
-import org.openapitools.model.ListBooksResponseInner;
+import org.openapitools.model.ListBooksResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -23,6 +23,7 @@ public class BookController implements BookApi {
 
     private final BookService bookService;
     private final BookResponseMapper bookResponseMapper;
+    private final ListBooksResponseMapper listBooksResponseMapper;
 
     @Override
     public ResponseEntity<BookResponse> createBook(CreateBookRequest createBookRequest) {
@@ -42,8 +43,10 @@ public class BookController implements BookApi {
     }
 
     @Override
-    public ResponseEntity<List<ListBooksResponseInner>> listBooks(Integer page, Integer limit, ListBooksFiltersRequest listBooksFiltersRequest) {
-        return ResponseEntity.status(HttpStatus.OK).body(List.of(new ListBooksResponseInner()));
+    public ResponseEntity<ListBooksResponse> listBooks(Integer page, Integer limit, String order, ListBooksFiltersRequest listBooksFiltersRequest) {
+        PaginationWrapper<Book> paginationWrapper = bookService.list(limit, page, order, listBooksFiltersRequest);
+
+        return ResponseEntity.status(HttpStatus.OK).body(listBooksResponseMapper.toResponse(paginationWrapper));
     }
 
     @Override

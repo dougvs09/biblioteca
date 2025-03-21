@@ -466,7 +466,7 @@ components:
             type: string
           description: author(s) of the book
           example: ['Paul Deitel', 'Harvey Deitel']
-    Error:
+    ErrorResponse:
       type: object
       required:
         - code
@@ -486,31 +486,46 @@ components:
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/Error"
+            $ref: "#/components/schemas/ErrorResponse"
+          example:
+            code: 400
+            message: 'Not found'
     NotFound:
       description: Not found
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/Error"
+            $ref: "#/components/schemas/ErrorResponse"
+          example:
+            code: 404
+            message: 'Not found'
     Unauthorized:
       description: Unauthorized
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/Error"
+            $ref: "#/components/schemas/ErrorResponse"
+          example:
+            code: 401
+            message: 'Unauthorized'
     UnprocessableContent:
       description: Unprocessable content
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/Error"
+            $ref: "#/components/schemas/ErrorResponse"
+          example:
+            code: 422
+            message: 'Unprocessable content'
     InternalServerError:
       description: Internal server error
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/Error"
+            $ref: "#/components/schemas/ErrorResponse"
+          example:
+            code: 500
+            message: 'Internal server error'
   securitySchemes:
     BearerAuth:
       description: Bearer token using a JWT

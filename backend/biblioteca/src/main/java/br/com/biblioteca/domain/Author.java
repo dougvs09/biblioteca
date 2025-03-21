@@ -1,12 +1,14 @@
 package br.com.biblioteca.domain;
 
 import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 
 @Getter
 public class Author {
 
+    @Setter
     private Integer id;
     private String name;
     private List<Book> books;
@@ -19,16 +21,15 @@ public class Author {
         this.active = true;
     }
 
-    private Author(String name) {
-        this.name = name;
-        this.active = true;
-    }
-
     public static Author of(Integer id, String name, List<Book> books) {
         return new Author(id, name, books);
     }
 
     public static Author of(String name) {
-        return new Author(name);
+        return new Author(null, name, null);
+    }
+
+    public static Author of(Integer id, String name) {
+        return new Author(id, name, null);
     }
 }

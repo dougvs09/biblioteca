@@ -5,7 +5,6 @@ import br.com.biblioteca.domain.Book;
 import br.com.biblioteca.domain.PaginationWrapper;
 import br.com.biblioteca.domain.StatusEnum;
 import br.com.biblioteca.exception.BookNotFoundException;
-import br.com.biblioteca.repository.AuthorRepository;
 import br.com.biblioteca.repository.BookAuthorRepository;
 import br.com.biblioteca.repository.BookRepository;
 import lombok.RequiredArgsConstructor;
@@ -22,8 +21,8 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class BookService {
 
-    private final AuthorRepository authorRepository;
     private final BookRepository bookRepository;
+    private final AuthorService authorService;
     private final BookAuthorRepository bookAuthorRepository;
 
     @Transactional
@@ -31,8 +30,10 @@ public class BookService {
         List<Author> authors = request.getAuthors().stream().map(Author::of).toList();
         Book book = Book.of(request.getName(), request.getResume(), request.getReleaseYear(), request.getGenre(), authors);
 
-        List<Integer> authorsId = authors.stream().map(authorRepository::create).toList();
+        List<Integer> authorsId = authors.stream().map(author -> authorService.create(author).getId()).toList();
+
         Integer bookId = bookRepository.create(book);
+
         authorsId.forEach(authorId -> bookAuthorRepository.create(bookId, authorId));
 
         book.setId(bookId);
@@ -58,7 +59,7 @@ public class BookService {
         Book book = bookRepository.getBookByBookId(id).orElseThrow(() ->
                 new BookNotFoundException("Book not found! Verify the id", HttpStatus.BAD_REQUEST));
 
-        List<Author> authors = authorRepository.getAuthorsByBookId(book.getId());
+        List<Author> authors = authorService.getAuthorsByBookId(book.getId());
 
         return book.addAuthors(authors);
     }

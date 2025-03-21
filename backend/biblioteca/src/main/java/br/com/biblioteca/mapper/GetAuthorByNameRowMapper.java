@@ -7,7 +7,7 @@ import org.jdbi.v3.core.statement.StatementContext;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class GetAuthorsByBookIdRowMapper implements RowMapper<Author> {
+public class GetAuthorByNameRowMapper implements RowMapper<Author> {
 
     @Override
     public Author map(ResultSet rs, StatementContext ctx) throws SQLException {

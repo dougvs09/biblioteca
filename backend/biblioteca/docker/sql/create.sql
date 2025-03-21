@@ -8,13 +8,25 @@ CREATE TABLE tbuser (
 	active BOOLEAN NOT NULL
 );
 
+CREATE TABLE tbauthor (
+    id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    name VARCHAR(100) NOT NULL,
+    active BOOLEAN NOT NULL
+);
+
 CREATE TABLE tbbook (
 	id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
 	name VARCHAR(255) NOT NULL,
 	resume TEXT,
-	release_date DATE,
+	release_year VARCHAR(4),
 	genre VARCHAR(100),
-	author VARCHAR(255),
 	status status NOT NULL,
 	active BOOLEAN NOT NULL
+);
+
+CREATE TABLE tbbookauthor (
+    id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    authorid INTEGER NOT NULL REFERENCES tbauthor,
+    bookid INTEGER NOT NULL REFERENCES tbbook,
+    active BOOLEAN NOT NULL
 );

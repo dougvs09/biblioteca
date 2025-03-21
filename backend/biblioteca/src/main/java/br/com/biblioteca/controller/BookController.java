@@ -1,5 +1,8 @@
 package br.com.biblioteca.controller;
 
+import br.com.biblioteca.domain.Book;
+import br.com.biblioteca.mapper.BookResponseMapper;
+import br.com.biblioteca.service.BookService;
 import lombok.RequiredArgsConstructor;
 import org.openapitools.api.BookApi;
 import org.openapitools.model.BookResponse;
@@ -18,9 +21,14 @@ import java.util.List;
 @RequestMapping("/v1")
 public class BookController implements BookApi {
 
+    private final BookService bookService;
+    private final BookResponseMapper bookResponseMapper;
+
     @Override
     public ResponseEntity<BookResponse> createBook(CreateBookRequest createBookRequest) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(new BookResponse());
+        Book book = bookService.create(createBookRequest);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(bookResponseMapper.toResponse(book));
     }
 
     @Override

@@ -4,7 +4,7 @@ spring:
   application:
     name: biblioteca
   datasource:
-    url: jdbc:postgresql://localhost:5432/biblioteca&useSSL=false
+    url: jdbc:postgresql://localhost:5432/Biblioteca
     username: guest
     password: guest
     driver-class: org.postgresql.Driver

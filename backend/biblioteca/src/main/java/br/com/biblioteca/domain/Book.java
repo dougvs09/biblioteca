@@ -2,6 +2,7 @@ package br.com.biblioteca.domain;
 
 import br.com.biblioteca.exception.BookCannotBeDeletedException;
 import br.com.biblioteca.exception.BookCannotBeRentedException;
+import br.com.biblioteca.exception.BookCannotBeReturnedException;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.http.HttpStatus;
@@ -42,6 +43,7 @@ public class Book {
         this.genre = genre;
         this.authors = authors;
         this.status = status;
+        this.active = true;
     }
 
     public static Book of(Integer id, String name, String resume, String releaseYear, String genre, List<Author> authors) {
@@ -80,7 +82,7 @@ public class Book {
 
     public void returning() {
         if (this.status == StatusEnum.AVAILABLE) {
-            throw new BookCannotBeRentedException("This book cannot be returned because it's available now", HttpStatus.BAD_REQUEST);
+            throw new BookCannotBeReturnedException("This book cannot be returned because it's available now", HttpStatus.BAD_REQUEST);
         }
 
         this.status = StatusEnum.AVAILABLE;
@@ -88,7 +90,7 @@ public class Book {
 
     public void delete() {
         if (this.status == StatusEnum.UNAVAILABLE) {
-            throw new BookCannotBeDeletedException("This book cannot be returned because it's available now", HttpStatus.BAD_REQUEST);
+            throw new BookCannotBeDeletedException("This book cannot be returned because it's rented now", HttpStatus.BAD_REQUEST);
         }
 
         this.active = false;

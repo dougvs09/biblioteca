@@ -30,3 +30,15 @@ CREATE TABLE tbbookauthor (
     bookid INTEGER NOT NULL REFERENCES tbbook,
     active BOOLEAN NOT NULL
 );
+
+CREATE INDEX idx_user
+ON tbuser(id, email, active);
+
+CREATE INDEX idx_author
+ON tbauthor(id, name, active);
+
+CREATE INDEX idx_book
+ON tbbook(id, name, active);
+
+CREATE INDEX idx_tbbookauthor
+ON tbbookauthor(id, bookid, authorid);

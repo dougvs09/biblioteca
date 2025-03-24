@@ -16,3 +16,10 @@ app:
   security:
     jwt:
       secret: c8ec3dac0f6a999479a5706e35b11aa194700d8e21be6f542285cf9e1810cafb
+
+sonar:
+  projectKey: library
+  projectName: library
+  host:
+    url: http://localhost:9000
+  login: ${SONAR_TOKEN}
